@@ -23,14 +23,25 @@ router.get('/', async (req, res) => {
 })
 
 
-
-
-
 // TODO: route for individual blog post(with comments)
+router.get('/post/:id', async (req, res) => {
+    try {
+        const postData = await Post.findByPk(req.params.id, {
+            include: [
+                {
+                    model: User,
+                    attributes: ['name']
+                }
+            ]
+        })
 
+        const post = postData.get({ plain: true });
+        res.render('post', { ...post });
 
-
-
+    } catch (err) {
+        res.status(500).json(err)
+    }
+})
 
 
 // TODO: route for user profile
